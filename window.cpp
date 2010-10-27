@@ -1,5 +1,4 @@
 #include "Window.h"
-#include "renderWindow.h"
 #include "wx/toolbar.h"
 #include <stdlib.h>
 #include <time.h>

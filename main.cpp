@@ -6,11 +6,13 @@
 #include "Sphere.h"
 #include "PolygonObject.h"
 #include "Renderer.h"
-#include "Window.h"
 
 using namespace std;
 int main(){
 
+
+
+    system("PAUSE");
     /*Vec3f start(0.3,0,10.0);
     //start.print();
     Vec3f end(0, -0.10, -50.0);
