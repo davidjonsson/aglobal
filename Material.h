@@ -1,5 +1,6 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
+
 #include <iostream>
 
 #include "Vec3f.h"
@@ -10,11 +11,11 @@ class Material{
                             color = Vec3f(r,g,b);
                             wR = wr;
                             wT = wt;
-                            } 
+                            }
              Material(const Material& mat){
                             *this = mat;
                             };
-      
+
               void print(){
                       std::cout<<"Material color: ";
                       color.print();
@@ -24,12 +25,13 @@ class Material{
                     this->color = mat.color;
                     this->wR = mat.wR;
                     this->wT = mat.wT;
+                    return *this;
                     };
-              Vec3f color;  
-              float wR,wT; 
-                 
-      
-      
+              Vec3f color;
+              float wR,wT;
+
+
+
       };
-      
+
 #endif
