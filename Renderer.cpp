@@ -5,7 +5,8 @@ IMPLEMENT_APP(Renderer)
 
 bool Renderer::OnInit()
 {
-    Window *window = new Window(wxT("Renderer"));
+    int w = 640, h = 480;
+    Window *window = new Window(wxT("Renderer"),w,h,true);
     window->Show(true);
 
     return true;
