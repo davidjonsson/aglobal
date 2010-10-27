@@ -3376,13 +3376,13 @@
 1288163893 c:\projects\aglobal\window.h
 	<wx/wx.h>
 
-1288105230 source:c:\projects\aglobal\sphere.cpp
+1288180174 source:c:\projects\aglobal\sphere.cpp
 	"Sphere.h"
 
-1288161913 c:\projects\aglobal\sphere.h
+1288180125 c:\projects\aglobal\sphere.h
 	"Shape.h"
 
-1288161905 c:\projects\aglobal\shape.h
+1288180130 c:\projects\aglobal\shape.h
 	"Vec3f.h"
 	"Ray.h"
 	"Material.h"
@@ -3418,18 +3418,23 @@
 	"Shape.h"
 	"Material.h"
 
-1288105230 source:c:\projects\aglobal\window.cpp
+1288182145 source:c:\projects\aglobal\window.cpp
 	"Window.h"
+	"Material.h"
+	"Ray.h"
+	"Sphere.h"
+	"PolygonObject.h"
 	"wx/toolbar.h"
 	<stdlib.h>
 	<time.h>
+	<math.h>
 
 1288105230 source:c:\projects\aglobal\polygon.cpp
 	"Polygon.h"
 
-1288162163 source:c:\projects\aglobal\polygonobject.cpp
+1288180212 source:c:\projects\aglobal\polygonobject.cpp
 	"PolygonObject.h"
 
-1288162173 c:\projects\aglobal\polygonobject.h
+1288180115 c:\projects\aglobal\polygonobject.h
 	"Shape.h"
 

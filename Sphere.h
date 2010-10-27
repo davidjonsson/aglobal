@@ -12,7 +12,7 @@ class Sphere : public Shape{
              float radius;
              Vec3f origin;
 
-             Vec3f intersect(Ray r);
+             Vec3f intersect(Ray* r);
 
             // Vec3f getNormal(Vec3f p){return origin-p;};
 

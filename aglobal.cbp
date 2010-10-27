@@ -62,13 +62,19 @@
 		<Linker>
 			<Add option="-mthreads" />
 		</Linker>
-		<Unit filename="aglobalApp.cpp" />
-		<Unit filename="aglobalApp.h" />
-		<Unit filename="aglobalMain.cpp" />
-		<Unit filename="aglobalMain.h" />
-		<Unit filename="resource.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
+		<Unit filename="Material.h" />
+		<Unit filename="PolygonObject.cpp" />
+		<Unit filename="PolygonObject.h" />
+		<Unit filename="Ray.h" />
+		<Unit filename="Renderer.cpp" />
+		<Unit filename="Renderer.h" />
+		<Unit filename="Shape.h" />
+		<Unit filename="Sphere.cpp" />
+		<Unit filename="Sphere.h" />
+		<Unit filename="Vec3f.cpp" />
+		<Unit filename="Vec3f.h" />
+		<Unit filename="Window.cpp" />
+		<Unit filename="Window.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

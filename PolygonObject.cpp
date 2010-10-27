@@ -23,9 +23,9 @@ PolygonObject::PolygonObject(Vec3f pOne, Vec3f pTwo, Vec3f pThree, Material mat)
                        normal.normalize();
                        material = mat;
                        }
-Vec3f PolygonObject::intersect(Ray ray){
+Vec3f PolygonObject::intersect(Ray* ray){
                        std::cout<<"Polygon Intersect"<<std::endl;
-                       float den = ray.direction.dot(normal);
+                       float den = ray->direction.dot(normal);
 
                        //om nämnare = 0 är ray/plan parallella och inte intressanta
                        if(den == 0)
@@ -33,10 +33,10 @@ Vec3f PolygonObject::intersect(Ray ray){
 
                        else{
 
-                       float num = (p1 - ray.start).dot(normal);
+                       float num = (p1 - ray->start).dot(normal);
 
                        float d = num/den;
-                       Vec3f intersect = ray.start + ray.direction * d;
+                       Vec3f intersect = ray->start + ray->direction * d;
 
                        Vec3f u = (p2-p1);
                        Vec3f v = (p1-p3);
