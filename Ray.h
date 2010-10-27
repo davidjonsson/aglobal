@@ -6,7 +6,7 @@
 
 //SKRIVA COPY CONSTRUCTORS!!!
 class Ray{
-      
+
       public:
              Ray(){};
              Ray(Vec3f s, Vec3f d, Vec3f c) : start(s), direction(d), color(c){
@@ -29,8 +29,8 @@ class Ray{
                    color.print();
                    };
               Vec3f start, direction, color;
-      
-      
+
+
       };
-      
+
 #endif
