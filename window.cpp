@@ -1,14 +1,17 @@
 #include "Window.h"
+#include "renderWindow.h"
 #include "wx/toolbar.h"
 #include <stdlib.h>
 #include <time.h>
 
-Window::Window(const wxString& title)
-       : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(600, 400))
-{
 
+Window::Window(const wxString& title,int w, int h, bool b)
+       : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(w, h))
+{
+  //ny
   SetBackgroundColour( wxColour( 100, 100, 100 ) );
   Show( true );
+  if(b){
   wxImage::AddHandler( new wxPNGHandler );
   wxBitmap render(wxT("images/render4.png"), wxBITMAP_TYPE_PNG);
   wxBitmap pause(wxT("images/pause4.png"), wxBITMAP_TYPE_PNG);
@@ -23,16 +26,40 @@ Window::Window(const wxString& title)
   SetToolBar(toolbar);
 
 
+
   Connect(wxID_EXIT, wxEVT_COMMAND_TOOL_CLICKED,
   wxCommandEventHandler(Window::OnQuit));
-
+  Connect(wxID_NEW, wxEVT_COMMAND_TOOL_CLICKED,
+            wxCommandEventHandler(Window::OnRender));
   Connect(wxEVT_PAINT, wxPaintEventHandler(Window::OnPaint));
+
+  }
+  else{
+        Connect(wxID_EXIT, wxEVT_COMMAND_TOOL_CLICKED,
+  wxCommandEventHandler(Window::OnQuit));
+    Connect(wxEVT_PAINT, wxPaintEventHandler(Window::OnPaintRender));
+  }
+
+
+  //Connect(wxEVT_PAINT, wxPaintEventHandler(Window::OnPaint));
   srand(time(NULL));
   Centre();
 }
 void Window::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
   Close(true);
+}
+
+void Window::OnRender(wxCommandEvent& event)
+{
+
+
+
+    int w = 1024, h = 768;
+    Window *window = new Window(wxT("Renderer"),w,h,false);
+    window->Show(true);
+
+
 }
 
 void Window::OnPaint(wxPaintEvent & event)
@@ -44,7 +71,32 @@ void Window::OnPaint(wxPaintEvent & event)
 
   wxSize size = this->GetSize();
 
+
+
+//vad gör detta?!?
+
   for (int i = 0; i<0; i++) {
+      x = rand() % size.x + 1;
+      y = rand() % size.y + 1;
+      dc.DrawPoint(x,y);
+  }
+
+}
+
+void Window::OnPaintRender(wxPaintEvent & event)
+{
+  wxPaintDC dc(this);
+
+  wxCoord x = 0;
+  wxCoord y = 0;
+
+  wxSize size = this->GetSize();
+
+
+
+//vad gör detta?!?
+
+  for (int i = 0; i<10000; i++) {
       x = rand() % size.x + 1;
       y = rand() % size.y + 1;
       dc.DrawPoint(x,y);
