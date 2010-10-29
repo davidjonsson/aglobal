@@ -3438,3 +3438,59 @@
 1288180115 c:\projects\aglobal\polygonobject.h
 	"Shape.h"
 
+1288371713 source:d:\projekt\global\git\renderer.cpp
+	"Renderer.h"
+	"Window.h"
+
+1288371713 d:\projekt\global\git\renderer.h
+	<wx/wx.h>
+
+1288373095 d:\projekt\global\git\window.h
+	<wx/wx.h>
+	"Material.h"
+	"Ray.h"
+	"Sphere.h"
+	"PolygonObject.h"
+	"wx/toolbar.h"
+	"Light.h"
+	"Scene.h"
+	"Vec3f.h"
+	<stdlib.h>
+	<time.h>
+	<math.h>
+
+1288371713 d:\projekt\global\git\material.h
+	<iostream>
+	"Vec3f.h"
+
+1288371713 d:\projekt\global\git\vec3f.h
+	<math.h>
+
+1288371713 d:\projekt\global\git\ray.h
+	<iostream>
+	"Vec3f.h"
+
+1288371713 d:\projekt\global\git\sphere.h
+	"Shape.h"
+
+1288371713 d:\projekt\global\git\shape.h
+	"Vec3f.h"
+	"Ray.h"
+	"Material.h"
+
+1288371713 d:\projekt\global\git\polygonobject.h
+	"Shape.h"
+
+1288371713 d:\projekt\global\git\light.h
+	"Vec3f.h"
+
+1288371713 source:d:\projekt\global\git\sphere.cpp
+	"Sphere.h"
+
+1288371713 source:d:\projekt\global\git\vec3f.cpp
+	"Vec3f.h"
+	<iostream>
+
+1288371713 source:d:\projekt\global\git\polygonobject.cpp
+	"PolygonObject.h"
+

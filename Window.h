@@ -5,11 +5,12 @@
 #include "PolygonObject.h"
 #include "wx/toolbar.h"
 #include "Light.h"
-#include "Scene.h"
+//#include "Scene.h"
 #include "Vec3f.h"
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <wx/wx.h>
 
 class Window : public wxFrame
 {
@@ -20,6 +21,6 @@ class Window : public wxFrame
          void OnPaintRender(wxPaintEvent & event);
          void OnRender(wxCommandEvent& event);
 
-         Vec3f **pixelData;
+        // Vec3f **pixelData;
 
 };

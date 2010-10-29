@@ -20,6 +20,7 @@ class Vec3f
      Vec3f operator+(const Vec3f v);
      Vec3f operator-(const Vec3f v);
      Vec3f operator*(const float mult);
+     Vec3f operator*(const Vec3f v);
      Vec3f operator/(const float mult);
      const Vec3f& operator=(const Vec3f& v);
      void print();

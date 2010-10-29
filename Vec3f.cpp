@@ -12,7 +12,7 @@ Vec3f::Vec3f()
     x = y = z = 0;
 }
 
-Vec3f::Vec3f(const Vec3f& v){                  
+Vec3f::Vec3f(const Vec3f& v){
                    *this = v;
                    }
 
@@ -47,6 +47,14 @@ Vec3f Vec3f::operator*(const float mult)
   return tmp;
 }
 
+Vec3f Vec3f::operator*(const Vec3f v){
+    Vec3f tmp;
+    tmp.x = this->x * v.x;
+    tmp.y = this->y * v.y;
+    tmp.z = this->z * v.z;
+    return tmp;
+}
+
 Vec3f Vec3f::operator/(const float mult)
 {
   Vec3f tmp;
@@ -59,12 +67,12 @@ Vec3f Vec3f::operator/(const float mult)
 
 const Vec3f& Vec3f::operator=(const Vec3f& v)
 {
-      
+
   this->x = v.x;
   this->y = v.y;
   this->z = v.z;
-  return *this;    
-  
+  return *this;
+
 }
 
 float Vec3f::dot(Vec3f v)

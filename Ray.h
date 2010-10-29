@@ -19,6 +19,7 @@ class Ray{
                        this->direction = r.direction;
                        this->color = r.color;
                        };
+            Vec3f traceRay();
 
               void print(){
                    std::cout<<std::endl<<"Start: ";
