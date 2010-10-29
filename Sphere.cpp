@@ -5,7 +5,7 @@ Sphere::Sphere(): radius(0), origin(Vec3f(0,0,0))
 Sphere::Sphere(float r, Vec3f ori, Material mat) : radius(r), origin(ori)
                         , Shape::Shape(mat) {}
 
-Vec3f Sphere::intersect(Ray* ray){
+Vec3f Sphere::intersect(Ray* ray, Vec3f* normalR){
       std::cout<<"Sphere Intersect"<<std::endl;
       Vec3f raySphere = origin - ray->start;
       float d = raySphere.dot(ray->direction); //direction normaliserad annars division
@@ -26,6 +26,10 @@ Vec3f Sphere::intersect(Ray* ray){
       t = d - q;
       else
       t = d + q;
+
+
+      ray->color = material.color;
+      *normalR = (ray->start + ray->direction * t) - origin;
 
       return (ray->start + ray->direction * t);
       }

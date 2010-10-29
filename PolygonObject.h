@@ -12,7 +12,7 @@ class PolygonObject : public Shape
                        ,material(Material::Material(0,0,0,0,0)){};
              PolygonObject(Vec3f, Vec3f, Vec3f);
              PolygonObject(Vec3f, Vec3f, Vec3f, Material);
-             Vec3f intersect(Ray* r);
+             Vec3f intersect(Ray* r, Vec3f* normalR);
 
 
       };

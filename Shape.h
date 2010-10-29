@@ -12,7 +12,7 @@ class Shape{
 
              Material getMaterial(){return material;};
             // virtual Vec3f intersect(ray r);
-             virtual Vec3f intersect(Ray* r) = 0;
+             virtual Vec3f intersect(Ray* r, Vec3f* normalR) = 0;
              Material material;
 
       };
