@@ -11,6 +11,7 @@ class Material{
                             color = Vec3f(r,g,b);
                             wR = wr;
                             wT = wt;
+                            refrIndex = 1.55;
                             }
              Material(const Material& mat){
                             *this = mat;
@@ -28,7 +29,7 @@ class Material{
                     return *this;
                     };
               Vec3f color;
-              float wR,wT;
+              float wR,wT,refrIndex;
 
 
 

@@ -2,10 +2,11 @@
 
 #define SIZEX 1024
 #define SIZEY 768
-#define SHAPESIZE 12
+#define SHAPESIZE 13
+#define MAXANGLE 0.7431
 Shape* a[SHAPESIZE];
 
-Vec3f traceRay(Ray r, int depth, Light L );
+Vec3f traceRay(Ray r, int depth, Light L , bool refracted);
 
 Window::Window(const wxString& title,int w, int h, bool b)
        : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(w, h))
@@ -91,7 +92,6 @@ void Window::OnPaintRender(wxPaintEvent & event)
 {
   wxPaintDC dc(this);
 
-
   wxSize size = this->GetSize();
 
   wxColour colour, col1, col2;
@@ -112,9 +112,10 @@ void Window::OnPaintRender(wxPaintEvent & event)
   col2.Set(0,100,0);
   Vec3f hit;
 
-  Material m(0, 0, 0.5, 0.3, 0);
-  Material m2(0.5,0.5, 0.5, 0.8, 0);
-  Sphere p(1, Vec3f(2,-1,-11.7), m);
+  Material m(0, 0, 0.5, 0, 1);
+  Material m2(0.5,0.5, 0.5, 0.5, 0);
+  Material m3(0,0.698, 0.698, 0, 0);
+  Sphere p(1, Vec3f(3,-1,-8), m);
 
   Material mat (0.5,0,0,0,0);
 
@@ -175,7 +176,8 @@ void Window::OnPaintRender(wxPaintEvent & event)
   v3 = Vec3f(wallSize, -wallSize, 0);
   PolygonObject p12(v1, v2, v3,mat);
 
-  Sphere p2(1.5, Vec3f(-1,1,-12.0), m2);
+  Sphere p2(1.5, Vec3f(2,-1,-11), m2);
+  Sphere p13(1, Vec3f(-2,-1,-8), m3);
 
   Light L1(0, -7.9,-8.5);
   L1.setColor(Vec3f(1,1,0.5));
@@ -193,6 +195,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
   a[9] = &p10;
   a[10] = &p11;
   a[11] = &p12;
+  a[12] = &p13;
   float fovx = M_PI/4.0;
   float fovy = (((float)size.y)/((float)size.x))*fovx*1.15;
 
@@ -203,12 +206,27 @@ void Window::OnPaintRender(wxPaintEvent & event)
 
             float xCord, yCord;
             Ray r;
-            Vec3f color;
+            Vec3f color, color2, color3, color4;
 
             xCord = (((float)(2* j) - size.x)/(float)size.x)*tan(fovx);
             yCord = (((float)(2* i) - size.y)/(float)size.y)*tan(fovy);
             r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
-            color = traceRay(r,3, L1);
+            color = traceRay(r,3, L1, false);
+
+            xCord = (((float)(2* (j+0.5)) - size.x)/(float)size.x)*tan(fovx);
+            yCord = (((float)(2* (i)) - size.y)/(float)size.y)*tan(fovy);
+            r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
+            color2 = traceRay(r,3, L1, false);
+
+            xCord = (((float)(2* (j)) - size.x)/(float)size.x)*tan(fovx);
+            yCord = (((float)(2* (i+0.5)) - size.y)/(float)size.y)*tan(fovy);
+            r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
+            color3 = traceRay(r,3, L1, false);
+
+            xCord = (((float)(2* (j+0.5)) - size.x)/(float)size.x)*tan(fovx);
+            yCord = (((float)(2* (i+0.5)) - size.y)/(float)size.y)*tan(fovy);
+            r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
+            color4 = traceRay(r,3, L1, false);
 
 //Super sampling nedan, verkar fungera men suger kraft!!
 /*
@@ -235,6 +253,8 @@ void Window::OnPaintRender(wxPaintEvent & event)
             r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
             color =color + traceRay(r,3, L1) * 0.25;
 */
+            color = Vec3f((color.x + color2.x + color3.x + color4.x)*0.25, (color.y + color2.y + color3.y + color4.y)*0.25, (color.z + color2.z + color3.z + color4.z)*0.25);
+
                     if(color.x > 1.0 || color.y > 1.0 || color.z > 1.0){
                     float max = -5;
                     if(color.x > max)
@@ -248,7 +268,6 @@ void Window::OnPaintRender(wxPaintEvent & event)
 
                  }
 
-
                 col2.Set((color.x * 255), (color.y * 255), (color.z * 255));
                 dc.SetPen(wxPen(col2, 1, wxSOLID));
 
@@ -259,7 +278,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
    // }
 }
 
-Vec3f traceRay(Ray ray, int depth, Light L){
+Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
 
 
         float length = 100000000;
@@ -296,10 +315,92 @@ Vec3f traceRay(Ray ray, int depth, Light L){
             float diff = pointToLight.dot(intersectNormal);
 
             if(wR > 0 && depth > 0){
-                Vec3f reflDirection = ray.direction - intersectNormal * (intersectNormal.dot(ray.direction)) * 2;
+                Vec3f reflDirection;
+
+                if(!refracted)
+                    reflDirection = ray.direction - intersectNormal * (intersectNormal.dot(ray.direction)) * 2;
+                else
+                    reflDirection = ray.direction - (intersectNormal * (-1)) * (intersectNormal.dot(ray.direction)) * 2;
+
                 intersectPoint = intersectPoint + reflDirection * 0.001;
                 Ray reflRay(intersectPoint, reflDirection, Vec3f(0,0,0));
-                returnColor = returnColor + traceRay(reflRay, --depth, L) * wR;
+                if(refracted)
+                    returnColor = returnColor + traceRay(reflRay, --depth, L, true) * wR;
+                else
+                    returnColor = returnColor + traceRay(reflRay, --depth, L, false) * wR;
+            }
+
+            if(wT > 0 && depth > 0)
+            {
+                bool willTransmit = true;
+                if(refracted)
+                    willTransmit = ((intersectNormal * (-1)).dot(ray.direction) < MAXANGLE);
+                else
+                    willTransmit = (intersectNormal.dot(ray.direction) < MAXANGLE);
+
+                if(willTransmit)
+                {
+                    Vec3f refrDirection;
+                    float n;
+                    intersectNormal.normalize();
+                    ray.direction.normalize();
+                    if(!refracted)
+                    {
+                        float cos1 = intersectNormal.dot((ray.direction * (-1)));
+                        float c1 = (1/1.33);
+                        float cos2 = sqrt(1 - c1*c1*(1-cos1*cos1));
+
+                        if(cos1 >= 0)
+                        {
+                            refrDirection = ray.direction * c1 + intersectNormal * (c1*cos1 - cos2);
+                        }
+                        else
+                        {
+                            refrDirection = ray.direction * c1 + intersectNormal * (c1*cos1 + cos2);
+                        }
+
+                        refrDirection.normalize();
+                        refrDirection = refrDirection - (refrDirection + intersectNormal * (intersectNormal.dot(intersectNormal))) * 2;
+                    /*n = 1/a[index]->getMaterial().refrIndex;
+                    float c1 = (intersectNormal * (-1)).dot(ray.direction);
+                    float c2 = sqrt(1-((n*n)*(1-(c1*c1))));
+                    refrDirection = ray.direction * n + intersectNormal * (n*c1-c2);
+                    refrDirection.normalize();*/
+                    }
+                    else
+                    {
+                    /*intersectNormal = intersectNormal * (-1);
+                    n = a[index]->getMaterial().refrIndex;
+                    float c1 = (intersectNormal * (-1)).dot(ray.direction);
+                    float c2 = sqrt(1-((n*n)*(1-(c1*c1))));
+                    refrDirection = ray.direction * n + intersectNormal * (n*c1-c2);
+                    refrDirection = refrDirection * (-1);*/
+                        float cos1 = intersectNormal.dot((ray.direction * (-1)));
+                        float c1 = (1.33);
+                        float cos2 = sqrt(1 - c1*c1*(1-cos1*cos1));
+
+                        if(cos1 >= 0)
+                        {
+                            refrDirection = ray.direction * c1 + intersectNormal * (c1*cos1 - cos2);
+                        }
+                        else
+                        {
+                            refrDirection = ray.direction * c1 + intersectNormal * (c1*cos1 + cos2);
+                        }
+
+                        refrDirection.normalize();
+                        refrDirection = refrDirection - (refrDirection - intersectNormal * (intersectNormal.dot(intersectNormal))) * 2;
+                    }
+
+                    intersectPoint = intersectPoint + refrDirection * 0.01;
+                    Ray refrRay(intersectPoint, refrDirection, Vec3f(0,0,0));
+
+
+                    if(!refracted)
+                        returnColor = returnColor + traceRay(refrRay, --depth, L, true) * wT;
+                    else
+                        returnColor = returnColor + traceRay(refrRay, --depth, L, false) * wT;
+                }
             }
 
             if(diff > 0 && (1 - wR - wT) > 0){

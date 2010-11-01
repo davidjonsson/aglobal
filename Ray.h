@@ -10,7 +10,7 @@ class Ray{
 
       public:
              Ray(){};
-             Ray(Vec3f s, Vec3f d, Vec3f c) : start(s), direction(d), color(c){
+             Ray(Vec3f s, Vec3f d, Vec3f c) : start(s), direction(d), color(c) {
                        //MÅSTE FIXAS
                        //direction.normalize();
                        direction.normalize();
@@ -24,8 +24,6 @@ class Ray{
       //      Vec3f traceRay(Shape* theShapes, Ray& r,int numShapes, int currentDepth);
 
               Vec3f start, direction, color;
-
-
       };
 
 #endif
