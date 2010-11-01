@@ -1,8 +1,9 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include <iostream>
 #include "Vec3f.h"
+//#include "Shape.h"
+
 
 //SKRIVA COPY CONSTRUCTORS!!!
 class Ray{
@@ -19,16 +20,9 @@ class Ray{
                        this->direction = r.direction;
                        this->color = r.color;
                        };
-            Vec3f traceRay();
+       //      Vec3f traceRay(PolygonObject s);
+      //      Vec3f traceRay(Shape* theShapes, Ray& r,int numShapes, int currentDepth);
 
-              void print(){
-                   std::cout<<std::endl<<"Start: ";
-                   start.print();
-                   std::cout<<" "<<"Direction: ";
-                   direction.print();
-                   std::cout<<" "<<"Color: ";
-                   color.print();
-                   };
               Vec3f start, direction, color;
 
 

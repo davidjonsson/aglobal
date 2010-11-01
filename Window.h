@@ -1,3 +1,6 @@
+
+#ifndef WINDOW_H
+#define WINDOW_H
 #include <wx/wx.h>
 #include "Material.h"
 #include "Ray.h"
@@ -24,3 +27,4 @@ class Window : public wxFrame
         // Vec3f **pixelData;
 
 };
+#endif

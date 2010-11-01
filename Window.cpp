@@ -2,6 +2,10 @@
 
 #define SIZEX 1024
 #define SIZEY 768
+#define SHAPESIZE 12
+Shape* a[SHAPESIZE];
+
+Vec3f traceRay(Ray r, int depth, Light L );
 
 Window::Window(const wxString& title,int w, int h, bool b)
        : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(w, h))
@@ -23,9 +27,9 @@ Window::Window(const wxString& title,int w, int h, bool b)
   toolbar->Realize();
   SetToolBar(toolbar);
 
-//  pixelData = new Vec3f*[SIZEX];
+// pixelData = new Vec3f*[SIZEX];
   //for(int i = 0; i < SIZEX; i++)
-  //   pixelData[i] = new Vec3f[SIZEY];
+  // pixelData[i] = new Vec3f[SIZEY];
 
 
   Connect(wxID_EXIT, wxEVT_COMMAND_TOOL_CLICKED,
@@ -52,9 +56,9 @@ void Window::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void Window::OnRender(wxCommandEvent& event)
 {
-//    Scene s(SIZEX, SIZEY);
- //   s.setupScene();
-  //  pixelData = s.renderScene();
+// Scene s(SIZEX, SIZEY);
+ // s.setupScene();
+  // pixelData = s.renderScene();
 
 
     Window *window = new Window(wxT("Renderer"),1024,600,false);
@@ -74,7 +78,6 @@ void Window::OnPaint(wxPaintEvent & event)
 
 
 
-//vad gör detta?!?
 
   for (int i = 0; i<0; i++) {
       x = rand() % size.x + 1;
@@ -88,8 +91,6 @@ void Window::OnPaintRender(wxPaintEvent & event)
 {
   wxPaintDC dc(this);
 
-  wxCoord x = 0;
-  wxCoord y = 0;
 
   wxSize size = this->GetSize();
 
@@ -111,9 +112,9 @@ void Window::OnPaintRender(wxPaintEvent & event)
   col2.Set(0,100,0);
   Vec3f hit;
 
-  Material m(0, 0.5, 0.5, 0.6, 0.4);
-  Material m2(0.5, 0.5, 0.5, 0.6, 0.4);
-  Sphere p(0.5, Vec3f(2,-1,-11.7), m);
+  Material m(0, 0, 0.5, 0.3, 0);
+  Material m2(0.5,0.5, 0.5, 0.8, 0);
+  Sphere p(1, Vec3f(2,-1,-11.7), m);
 
   Material mat (0.5,0,0,0,0);
 
@@ -130,7 +131,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
   v3 = Vec3f(wallSize, -wallSize, -15);
   PolygonObject p4(v1, v2, v3, mat);
 
-  mat = Material(0,0.5,0,0,0);
+  mat = Material(0.5,0.5,0.5,0,0);
   v1 = Vec3f(-wallSize, 3,-15);
   v2 = Vec3f(wallSize, 3, -15);
   v3 = Vec3f(wallSize, 3, 0);
@@ -174,12 +175,12 @@ void Window::OnPaintRender(wxPaintEvent & event)
   v3 = Vec3f(wallSize, -wallSize, 0);
   PolygonObject p12(v1, v2, v3,mat);
 
-  Sphere p2(1, Vec3f(1,1,-12.0), m2);
+  Sphere p2(1.5, Vec3f(-1,1,-12.0), m2);
 
   Light L1(0, -7.9,-8.5);
   L1.setColor(Vec3f(1,1,0.5));
 
-  Shape* a[12];
+
   a[0] = &p;
   a[1] = &p2;
   a[2] = &p3;
@@ -193,79 +194,143 @@ void Window::OnPaintRender(wxPaintEvent & event)
   a[10] = &p11;
   a[11] = &p12;
   float fovx = M_PI/4.0;
-  float fovy = (((float)size.y)/((float)size.x))*fovx;
+  float fovy = (((float)size.y)/((float)size.x))*fovx*1.15;
 
   for (int i = 0; i<size.y; i++)
   {
         for(int j = 0; j<size.x; j++)
         {
 
-//måste bara göras för första
-            float xCord = ((float)(2*j - size.x)/(float)size.x)*tan(fovx);
-            float yCord = ((float)(2*i - size.y)/(float)size.y)*tan(fovy);
+            float xCord, yCord;
+            Ray r;
+            Vec3f color;
 
-            Ray r(Vec3f(0, 0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
-//rekursivt
+            xCord = (((float)(2* j) - size.x)/(float)size.x)*tan(fovx);
+            yCord = (((float)(2* i) - size.y)/(float)size.y)*tan(fovy);
+            r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
+            color = traceRay(r,3, L1);
 
+//Super sampling nedan, verkar fungera men suger kraft!!
 /*
-            float length = 1000000000;
-            int index = -1;
-            Vec3f normal, normalTmp, intersectTmp;
-            for(int k = 0; k < 12; k++)
-            {
-                hit = a[k]->intersect(&r, &normal);
+            xCord = ((float)(2*(j-0.5) - size.x)/(float)size.x)*tan(fovx);
+            yCord = ((float)(2*(i+0.5) - size.y)/(float)size.y)*tan(fovy);
+          r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
+            color = traceRay(r,3, L1) * 0.25;
 
-                if(!(hit.x == 0 && hit.y == 0 && hit.z == 0))
-                {
-                    float currLength = (hit - r.start).lengthSquare();
-                    if(currLength < length)
-                    {
-                        normalTmp = normal;
-                        intersectTmp = hit;
-                        length = currLength;
-                        index = k;
-                    }
+            xCord = ((float)(2*(j+0.5) - size.x)/(float)size.x)*tan(fovx);
+            yCord = ((float)(2*(i+0.5) - size.y)/(float)size.y)*tan(fovy);
+
+            r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
+            color = color + traceRay(r,3, L1) * 0.25;
+
+            xCord = ((float)(2*(j-0.5) - size.x)/(float)size.x)*tan(fovx);
+            yCord = ((float)(2*(i-0.5) - size.y)/(float)size.y)*tan(fovy);
+
+            r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
+            color = color + traceRay(r,3, L1) * 0.25;
+
+            xCord = ((float)(2*(j+0.5) - size.x)/(float)size.x)*tan(fovx);
+            yCord = ((float)(2*(i-0.5) - size.y)/(float)size.y)*tan(fovy);
+
+            r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
+            color =color + traceRay(r,3, L1) * 0.25;
+*/
+                    if(color.x > 1.0 || color.y > 1.0 || color.z > 1.0){
+                    float max = -5;
+                    if(color.x > max)
+                        max = color.x;
+                    if(color.y > max)
+                        max = color.y;
+                    if(color.z > max)
+                        max = color.z;
+
+                    color = color * (1/max);
+
+                 }
+
+
+                col2.Set((color.x * 255), (color.y * 255), (color.z * 255));
+                dc.SetPen(wxPen(col2, 1, wxSOLID));
+
+                dc.DrawPoint(j,i);
+            }
+        }
+
+   // }
+}
+
+Vec3f traceRay(Ray ray, int depth, Light L){
+
+
+        float length = 100000000;
+        int index = -1;
+        Vec3f hit,normal, intersectNormal, intersectPoint;
+
+        for(int k = 0; k < SHAPESIZE; k++){
+
+            hit = a[k]->intersect(&ray, &normal);
+
+            if(!(hit.x == 0 && hit.y == 0 && hit.z == 0)){
+
+                float currLength = (hit - ray.start).lengthSquare();
+
+                if(currLength < length){
+
+                    intersectNormal = normal;
+                    intersectPoint = hit;
+                    length = currLength;
+                    index = k;
                 }
             }
-            if(index != -1)
-            {
+        }
 
-                Vec3f pointToLight = L1.position - intersectTmp;
-                pointToLight.normalize();
-                normalTmp.normalize();
-                Vec3f colorFromLight;
-                float diff = pointToLight.dot(normalTmp);
-                if(diff > 0)
-                {
-                    bool occlusion = false;
-                    //dc.SetPen(wxPen(wxColor(240,0,0), 1, wxSOLID));
+        if(index != -1){
 
-                    //dc.DrawPoint(j,i);
-                    colorFromLight = L1.color;// * pointToLight.dot(normalTmp);
-                    Ray shadowRay(intersectTmp, pointToLight, Vec3f(0.5,0.5,0.5));
-                    Vec3f tempNormal;
-                    for(int k2 = 0; k2 < 12; k2++)
-                    {
-                        Vec3f hitShadow = a[k2]->intersect(&shadowRay, &tempNormal);
-                        if(!(hitShadow.x == 0 && hitShadow.y == 0 && hitShadow.z == 0) && (hitShadow - intersectTmp).lengthSquare() < (L1.position - intersectTmp).lengthSquare() && k2 != index)
-                            colorFromLight = Vec3f(0.0,0.0,0.0);
+            Vec3f pointToLight = L.position - intersectPoint;
+            pointToLight.normalize();
+            intersectNormal.normalize();
+            Vec3f returnColor;
+
+            float wR = a[index]->getMaterial().wR, wT = a[index]->getMaterial().wT;
+            Vec3f colorFromLight = L.color;
+            float diff = pointToLight.dot(intersectNormal);
+
+            if(wR > 0 && depth > 0){
+                Vec3f reflDirection = ray.direction - intersectNormal * (intersectNormal.dot(ray.direction)) * 2;
+                intersectPoint = intersectPoint + reflDirection * 0.001;
+                Ray reflRay(intersectPoint, reflDirection, Vec3f(0,0,0));
+                returnColor = returnColor + traceRay(reflRay, --depth, L) * wR;
+            }
+
+            if(diff > 0 && (1 - wR - wT) > 0){
+
+                Vec3f tmpNormal;
+                bool occlusion = false;
+                Ray shadowRay(intersectPoint, pointToLight, Vec3f(0,0,0));
+
+                for(int j = 0; j < SHAPESIZE; j++){
+                    Vec3f hitShadow = a[j]->intersect(&shadowRay, &tmpNormal);
+                    if(!(hitShadow.x == 0 && hitShadow.y == 0 && hitShadow.z == 0) && j != index){
+                        if((hitShadow - intersectPoint).lengthSquare() < (L.position - intersectPoint).lengthSquare()){
+                                colorFromLight = Vec3f(0,0,0);
+                            }
+                        }
                     }
                 }
                 else
                     colorFromLight = Vec3f(0,0,0);
-
-
-                Vec3f tempColor = colorFromLight* diff * a[index]->getMaterial().color;
-                //if(tempColor.x > 1.0 || tempColor.y > 1.0 || tempColor.z > 1.0)
-                 //   tempColor.normalize();
-//                col2.Set((tempColor.x * 255), (tempColor.y * 255), (tempColor.z * 255));
-                dc.SetPen(wxPen(col2, 1, wxSOLID));
-
-                dc.DrawPoint(j,i);*/
+                //fixa skalning korrekt sedan. 1-wR-wT duger inte..
+                returnColor = returnColor + colorFromLight * diff* a[index]->getMaterial().color;
+                return returnColor;
             }
-        }
+            else
+                return Vec3f(0,0,0);
+
+
 
     }
+
+
 
 
 
