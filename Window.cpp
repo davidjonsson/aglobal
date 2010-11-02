@@ -1,8 +1,9 @@
 #include "Window.h"
+#include <stdlib.h>
 
 #define SIZEX 1024
 #define SIZEY 768
-#define SHAPESIZE 13
+#define SHAPESIZE 7
 #define MAXANGLE 0.7431
 Shape* a[SHAPESIZE];
 
@@ -112,16 +113,16 @@ void Window::OnPaintRender(wxPaintEvent & event)
   col2.Set(0,100,0);
   Vec3f hit;
 
-  Material m(0, 0, 0.5, 0, 1);
-  Material m2(0.5,0.5, 0.5, 0.5, 0);
+  Material m(0, 0, 0.5, 0, 0);
+  Material m2(0.5,0.5, 0.5, 0, 0);
   Material m3(0,0.698, 0.698, 0, 0);
-  Sphere p(1, Vec3f(3,-1,-8), m);
+  Sphere p(1, Vec3f(2,-1,-8), m);
 
   Material mat (0.5,0,0,0,0);
 
 
   int wallSize = 8;
-
+ //bakre wall
   Vec3f v1 = Vec3f(-wallSize,3,-15);
   Vec3f v2 = Vec3f(wallSize, 3, -15);
   Vec3f v3 = Vec3f(-wallSize, -wallSize, -15);
@@ -132,6 +133,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
   v3 = Vec3f(wallSize, -wallSize, -15);
   PolygonObject p4(v1, v2, v3, mat);
 
+//floor
   mat = Material(0.5,0.5,0.5,0,0);
   v1 = Vec3f(-wallSize, 3,-15);
   v2 = Vec3f(wallSize, 3, -15);
@@ -143,6 +145,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
   v3 = Vec3f(-wallSize, 3, 0);
   PolygonObject p6(v1, v2, v3, mat);
 
+//right wall
   mat = Material(0,0,0.5,0,0);
   v1 = Vec3f(wallSize, 3,-15);
   v2 = Vec3f(wallSize, 3, 0);
@@ -154,7 +157,8 @@ void Window::OnPaintRender(wxPaintEvent & event)
   v3 = Vec3f(wallSize, -wallSize, 0);
   PolygonObject p8(v1, v2, v3,mat);
 
-  mat = Material(0.5,0.5,0.5,0,0);
+//left wall
+  mat = Material(0,0.5,0.5,0,0);
   v1 = Vec3f(-wallSize, 3,-15);
   v2 = Vec3f(-wallSize, -wallSize, 0);
   v3 = Vec3f(-wallSize, 3, 0);
@@ -165,6 +169,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
   v3 = Vec3f(-wallSize, -wallSize, 0);
   PolygonObject p10(v1, v2, v3, mat);
 
+//tak
   mat = Material(0,0.5,0.5,0,0);
   v1 = Vec3f(-wallSize, -wallSize,-15);
   v2 = Vec3f(wallSize, -wallSize, 0);
@@ -179,10 +184,18 @@ void Window::OnPaintRender(wxPaintEvent & event)
   Sphere p2(1.5, Vec3f(2,-1,-11), m2);
   Sphere p13(1, Vec3f(-2,-1,-8), m3);
 
-  Light L1(0, -7.9,-8.5);
-  L1.setColor(Vec3f(1,1,0.5));
+  Light L1(0, -8,-8,1.0f,1.0f);
+  L1.setColor(Vec3f(1,1,1));
 
+    a[0] = &p;
+    a[1] = &p5;
+    a[2] = &p6;
+    a[3] = &p2;
+    a[4] = &p13;
+    a[5] = &p7;
+    a[6] = &p8;
 
+/*
   a[0] = &p;
   a[1] = &p2;
   a[2] = &p3;
@@ -193,9 +206,12 @@ void Window::OnPaintRender(wxPaintEvent & event)
   a[7] = &p8;
   a[8] = &p9;
   a[9] = &p10;
-  a[10] = &p11;
+  a[10] = &p13;
+*/
+  /*
   a[11] = &p12;
   a[12] = &p13;
+*/
   float fovx = M_PI/4.0;
   float fovy = (((float)size.y)/((float)size.x))*fovx*1.15;
 
@@ -208,6 +224,11 @@ void Window::OnPaintRender(wxPaintEvent & event)
             Ray r;
             Vec3f color, color2, color3, color4;
 
+            xCord = (((float)(2* j) - size.x)/(float)size.x)*tan(fovx);
+            yCord = (((float)(2* i) - size.y)/(float)size.y)*tan(fovy);
+            r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
+            color = traceRay(r,3, L1, false);
+  /*
             xCord = (((float)(2* j) - size.x)/(float)size.x)*tan(fovx);
             yCord = (((float)(2* i) - size.y)/(float)size.y)*tan(fovy);
             r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
@@ -227,7 +248,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
             yCord = (((float)(2* (i+0.5)) - size.y)/(float)size.y)*tan(fovy);
             r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
             color4 = traceRay(r,3, L1, false);
-
+*/
 //Super sampling nedan, verkar fungera men suger kraft!!
 /*
             xCord = ((float)(2*(j-0.5) - size.x)/(float)size.x)*tan(fovx);
@@ -253,7 +274,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
             r = Ray(Vec3f(0,0, 0), Vec3f(xCord,yCord,-1), Vec3f(1, 0, 0) );
             color =color + traceRay(r,3, L1) * 0.25;
 */
-            color = Vec3f((color.x + color2.x + color3.x + color4.x)*0.25, (color.y + color2.y + color3.y + color4.y)*0.25, (color.z + color2.z + color3.z + color4.z)*0.25);
+          //  color = Vec3f((color.x + color2.x + color3.x + color4.x)*0.25, (color.y + color2.y + color3.y + color4.y)*0.25, (color.z + color2.z + color3.z + color4.z)*0.25);
 
                     if(color.x > 1.0 || color.y > 1.0 || color.z > 1.0){
                     float max = -5;
@@ -305,15 +326,15 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
 
         if(index != -1){
 
-            Vec3f pointToLight = L.position - intersectPoint;
-            pointToLight.normalize();
+
             intersectNormal.normalize();
             Vec3f returnColor;
 
             float wR = a[index]->getMaterial().wR, wT = a[index]->getMaterial().wT;
             Vec3f colorFromLight = L.color;
-            float diff = pointToLight.dot(intersectNormal);
 
+
+//reflective
             if(wR > 0 && depth > 0){
                 Vec3f reflDirection;
 
@@ -330,6 +351,7 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
                     returnColor = returnColor + traceRay(reflRay, --depth, L, false) * wR;
             }
 
+//refractive
             if(wT > 0 && depth > 0)
             {
                 bool willTransmit = true;
@@ -403,25 +425,52 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
                 }
             }
 
-            if(diff > 0 && (1 - wR - wT) > 0){
+//direct lighting
+//fix the weights here...  1 -wR - wT no good..
+//uniform sampling --> p(y) = 1/area(Light)
 
-                Vec3f tmpNormal;
-                bool occlusion = false;
-                Ray shadowRay(intersectPoint, pointToLight, Vec3f(0,0,0));
+                float area = L.length * L.width;
+                float pY = 1/area;
+                int NUM_SHADOW_RAYS = 36;
+                float den = 1/(NUM_SHADOW_RAYS * pY);
+                srand(NULL);
+                float y = L.position.y;
+                Vec3f diffColor(0,0,0), mtrlColor = a[index]->getMaterial().color;
+
+//random values, range 0-0.99
+            for(int N = 0; N < NUM_SHADOW_RAYS; N++){
+                float x = ((float)(rand() % 100))/100;
+                float z = ((float)(rand() % 100))/100;
+
+
+//positive x to the right, positive z out towards us.
+//L.position defined as left corner closest to viewer
+                x  = L.position.x + x * L.width;
+                z  = L.position.z - z * L.length;
+
+                Vec3f pointToLight, normal, surfacePoint;
+                pointToLight = Vec3f(x,y,z) - intersectPoint;
+                float r2 = pointToLight.lengthSquare();
+                pointToLight.normalize();
+                surfacePoint = intersectPoint + pointToLight * 0.001;
+                Ray shadowRay(surfacePoint, pointToLight, Vec3f(0,0,0));
+                colorFromLight = L.color;
 
                 for(int j = 0; j < SHAPESIZE; j++){
-                    Vec3f hitShadow = a[j]->intersect(&shadowRay, &tmpNormal);
-                    if(!(hitShadow.x == 0 && hitShadow.y == 0 && hitShadow.z == 0) && j != index){
-                        if((hitShadow - intersectPoint).lengthSquare() < (L.position - intersectPoint).lengthSquare()){
+                    Vec3f hitShadow = a[j]->intersect(&shadowRay, &normal);
+                    if(!(hitShadow.x == 0 && hitShadow.y == 0 && hitShadow.z == 0)){
                                 colorFromLight = Vec3f(0,0,0);
+                                break;
                             }
-                        }
+
                     }
-                }
-                else
-                    colorFromLight = Vec3f(0,0,0);
+                    if(colorFromLight.x != 0 && colorFromLight.y != 0 && colorFromLight.z != 0){
+                    diffColor = diffColor + colorFromLight * (intersectNormal.dot(pointToLight) * L.normal.dot(pointToLight * (-1)) / r2);
+                    }
+            }
+                diffColor = diffColor * (1/den);
                 //fixa skalning korrekt sedan. 1-wR-wT duger inte..
-                returnColor = returnColor + colorFromLight * diff* a[index]->getMaterial().color;
+                returnColor = returnColor + diffColor * mtrlColor * (1-wR-wT);
                 return returnColor;
             }
             else
