@@ -113,13 +113,12 @@ void Window::OnPaintRender(wxPaintEvent & event)
   col2.Set(0,100,0);
   Vec3f hit;
 
-  Material m(0, 0, 0.5, 0, 0);
+  Material m(0, 0, 0.5, 0.1, 0);
   Material m2(0.5,0.5, 0.5, 0, 0);
   Material m3(0,0.698, 0.698, 0, 0);
+  m3.setSpecular(100,1000);
   Sphere p(1, Vec3f(2,-1,-8), m);
-
   Material mat (0.5,0,0,0,0);
-
 
   int wallSize = 8;
  //bakre wall
@@ -219,7 +218,6 @@ void Window::OnPaintRender(wxPaintEvent & event)
   {
         for(int j = 0; j<size.x; j++)
         {
-
             float xCord, yCord;
             Ray r;
             Vec3f color, color2, color3, color4;
@@ -295,13 +293,12 @@ void Window::OnPaintRender(wxPaintEvent & event)
                 dc.DrawPoint(j,i);
             }
         }
-
-   // }
 }
 
 Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
 
 
+       Vec3f specColor;
         float length = 100000000;
         int index = -1;
         Vec3f hit,normal, intersectNormal, intersectPoint;
@@ -329,10 +326,29 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
 
             intersectNormal.normalize();
             Vec3f returnColor;
+            Vec3f specColor(1,1,1);
 
             float wR = a[index]->getMaterial().wR, wT = a[index]->getMaterial().wT;
             Vec3f colorFromLight = L.color;
+//specular (Blinn-Phong)
+           //H is the half vector caluclated from ligthDir and the normal. (Cheaper to calculate than V*R)
+           Vec3f H;
 
+           float specSharpness = a[index]->getMaterial().specH;
+           float specIntensity = a[index]->getMaterial().specI;
+           Vec3f viewDir(ray.start-intersectPoint);
+           Vec3f lightDir = L.position-intersectPoint;
+
+           float dist = lightDir.lengthSquare();
+
+          viewDir.normalize();
+           lightDir.normalize();
+
+            H = (lightDir + viewDir);
+            H.normalize();
+            //intensity of the reflective light
+           float I = pow(intersectNormal.dot(H),specSharpness);
+           specColor = (specColor*I*specIntensity)/dist;
 
 //reflective
             if(wR > 0 && depth > 0){
@@ -383,7 +399,8 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
 
                         refrDirection.normalize();
                         refrDirection = refrDirection - (refrDirection + intersectNormal * (intersectNormal.dot(intersectNormal))) * 2;
-                    /*n = 1/a[index]->getMaterial().refrIndex;
+
+                   /* n = 1/a[index]->getMaterial().refrIndex;
                     float c1 = (intersectNormal * (-1)).dot(ray.direction);
                     float c2 = sqrt(1-((n*n)*(1-(c1*c1))));
                     refrDirection = ray.direction * n + intersectNormal * (n*c1-c2);
@@ -430,9 +447,7 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
 //uniform sampling --> p(y) = 1/area(Light)
 
                 float area = L.length * L.width;
-                float pY = 1/area;
                 int NUM_SHADOW_RAYS = 36;
-                float den = 1/(NUM_SHADOW_RAYS * pY);
                 srand(NULL);
                 float y = L.position.y;
                 Vec3f diffColor(0,0,0), mtrlColor = a[index]->getMaterial().color;
@@ -454,7 +469,7 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
                 pointToLight.normalize();
                 surfacePoint = intersectPoint + pointToLight * 0.001;
                 Ray shadowRay(surfacePoint, pointToLight, Vec3f(0,0,0));
-                colorFromLight = L.color;
+                Vec3f colorFromLight = L.color;
 
                 for(int j = 0; j < SHAPESIZE; j++){
                     Vec3f hitShadow = a[j]->intersect(&shadowRay, &normal);
@@ -465,17 +480,16 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
 
                     }
                     if(colorFromLight.x != 0 && colorFromLight.y != 0 && colorFromLight.z != 0){
-                    diffColor = diffColor + colorFromLight * (intersectNormal.dot(pointToLight) * L.normal.dot(pointToLight * (-1)) / r2);
+                    diffColor = diffColor + colorFromLight * (intersectNormal.dot(pointToLight) * L.normal.dot(pointToLight * (-1)) / (r2/5));
                     }
             }
-                diffColor = diffColor * (1/den);
+
                 //fixa skalning korrekt sedan. 1-wR-wT duger inte..
-                returnColor = returnColor + diffColor * mtrlColor * (1-wR-wT);
+                returnColor = returnColor + specColor+ diffColor * mtrlColor * (1-wR-wT);
                 return returnColor;
             }
             else
-                return Vec3f(0,0,0);
-
+               return Vec3f(0,0,0);
 
 
     }

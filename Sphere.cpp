@@ -1,7 +1,7 @@
 #include "Sphere.h"
 
 Sphere::Sphere(): radius(0), origin(Vec3f(0,0,0))
-                        , Shape::Shape(Material::Material(0,0,0,0,0)){}
+                        , Shape::Shape(Material(0,0,0,0,0)){}
 Sphere::Sphere(float r, Vec3f ori, Material mat) : radius(r), origin(ori)
                         , Shape::Shape(mat) {}
 

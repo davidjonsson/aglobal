@@ -9,7 +9,7 @@ class PolygonObject : public Shape
 
 
              PolygonObject() : p1(Vec3f(0,0,0)), p2(Vec3f(0,0,0)), p3(Vec3f(0,0,0)), normal(Vec3f(0,0,0))
-                       ,Shape::Shape(Material::Material(0,0,0,0,0)){};
+                       ,Shape::Shape(Material(0,0,0,0,0)){};
              PolygonObject(Vec3f , Vec3f , Vec3f );
              PolygonObject(Vec3f, Vec3f, Vec3f, Material);
              Vec3f intersect(Ray* r, Vec3f* normalR);
