@@ -60,6 +60,9 @@ class Material{
 
               Vec3f color;
               float wR,wT,refrIndex, specI,specH,type;
+
       };
+
+
 
 #endif

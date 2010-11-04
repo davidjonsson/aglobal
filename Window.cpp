@@ -1,13 +1,13 @@
 #include "Window.h"
 #include <stdlib.h>
-
 #define SIZEX 1024
 #define SIZEY 768
-#define SHAPESIZE 7
+#define SHAPESIZE 11
 #define MAXANGLE 0.7431
 Shape* a[SHAPESIZE];
 
-Vec3f traceRay(Ray r, int depth, Light L , bool refracted);
+Vec3f traceRay(Ray ray, int depth, Light L, bool refracted);
+Vec3f specular(float specSharpness,float specIntensity,Vec3f viewDir,Vec3f lightDir, Vec3f normal);
 
 Window::Window(const wxString& title,int w, int h, bool b)
        : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(w, h))
@@ -114,10 +114,11 @@ void Window::OnPaintRender(wxPaintEvent & event)
   Vec3f hit;
 
   Material m(0, 0, 0.5, 0.1, 0);
-  Material m2(0.5,0.5, 0.5, 0, 0);
+  Material m2(0.5,0.5, 0.5, 0, 1);
   Material m3(0,0.698, 0.698, 0, 0);
   m3.setSpecular(100,1000);
-  Sphere p(1, Vec3f(2,-1,-8), m);
+  m2.setSpecular(500,1000);
+  Sphere p(1, Vec3f(5,2,-8), m);
   Material mat (0.5,0,0,0,0);
 
   int wallSize = 8;
@@ -180,21 +181,23 @@ void Window::OnPaintRender(wxPaintEvent & event)
   v3 = Vec3f(wallSize, -wallSize, 0);
   PolygonObject p12(v1, v2, v3,mat);
 
-  Sphere p2(1.5, Vec3f(2,-1,-11), m2);
-  Sphere p13(1, Vec3f(-2,-1,-8), m3);
+  Sphere p2(1.5, Vec3f(2,1.5,-11), m2);
+  Sphere p13(1, Vec3f(-2,2,-8), m3);
 
   Light L1(0, -8,-8,1.0f,1.0f);
   L1.setColor(Vec3f(1,1,1));
 
-    a[0] = &p;
+ /*   a[0] = &p;
     a[1] = &p5;
     a[2] = &p6;
     a[3] = &p2;
     a[4] = &p13;
     a[5] = &p7;
     a[6] = &p8;
+    a[7] = &p4;
+    a[8] = &p9;
+    a[9] = &p10;*/
 
-/*
   a[0] = &p;
   a[1] = &p2;
   a[2] = &p3;
@@ -206,7 +209,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
   a[8] = &p9;
   a[9] = &p10;
   a[10] = &p13;
-*/
+
   /*
   a[11] = &p12;
   a[12] = &p13;
@@ -331,24 +334,13 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
             float wR = a[index]->getMaterial().wR, wT = a[index]->getMaterial().wT;
             Vec3f colorFromLight = L.color;
 //specular (Blinn-Phong)
-           //H is the half vector caluclated from ligthDir and the normal. (Cheaper to calculate than V*R)
-           Vec3f H;
 
            float specSharpness = a[index]->getMaterial().specH;
            float specIntensity = a[index]->getMaterial().specI;
            Vec3f viewDir(ray.start-intersectPoint);
            Vec3f lightDir = L.position-intersectPoint;
+           specColor  = specular(specSharpness,specIntensity,viewDir,lightDir,intersectNormal);
 
-           float dist = lightDir.lengthSquare();
-
-          viewDir.normalize();
-           lightDir.normalize();
-
-            H = (lightDir + viewDir);
-            H.normalize();
-            //intensity of the reflective light
-           float I = pow(intersectNormal.dot(H),specSharpness);
-           specColor = (specColor*I*specIntensity)/dist;
 
 //reflective
             if(wR > 0 && depth > 0){
@@ -400,20 +392,9 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
                         refrDirection.normalize();
                         refrDirection = refrDirection - (refrDirection + intersectNormal * (intersectNormal.dot(intersectNormal))) * 2;
 
-                   /* n = 1/a[index]->getMaterial().refrIndex;
-                    float c1 = (intersectNormal * (-1)).dot(ray.direction);
-                    float c2 = sqrt(1-((n*n)*(1-(c1*c1))));
-                    refrDirection = ray.direction * n + intersectNormal * (n*c1-c2);
-                    refrDirection.normalize();*/
                     }
                     else
                     {
-                    /*intersectNormal = intersectNormal * (-1);
-                    n = a[index]->getMaterial().refrIndex;
-                    float c1 = (intersectNormal * (-1)).dot(ray.direction);
-                    float c2 = sqrt(1-((n*n)*(1-(c1*c1))));
-                    refrDirection = ray.direction * n + intersectNormal * (n*c1-c2);
-                    refrDirection = refrDirection * (-1);*/
                         float cos1 = intersectNormal.dot((ray.direction * (-1)));
                         float c1 = (1.33);
                         float cos2 = sqrt(1 - c1*c1*(1-cos1*cos1));
@@ -442,12 +423,9 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
                 }
             }
 
-//direct lighting
-//fix the weights here...  1 -wR - wT no good..
-//uniform sampling --> p(y) = 1/area(Light)
 
                 float area = L.length * L.width;
-                int NUM_SHADOW_RAYS = 36;
+                int NUM_SHADOW_RAYS = 16;
                 srand(NULL);
                 float y = L.position.y;
                 Vec3f diffColor(0,0,0), mtrlColor = a[index]->getMaterial().color;
@@ -492,7 +470,24 @@ Vec3f traceRay(Ray ray, int depth, Light L, bool refracted = false){
                return Vec3f(0,0,0);
 
 
-    }
+}
+Vec3f specular(float specSharpness,float specIntensity,Vec3f viewDir,Vec3f lightDir, Vec3f normal){
+    //H is the half vector caluclated from ligthDir and the normal. (Cheaper to calculate than V*R)
+
+    Vec3f specColor,H;
+    float dist = lightDir.lengthSquare();
+
+    viewDir.normalize();
+    lightDir.normalize();
+
+    H = (lightDir + viewDir);
+    H.normalize();
+    //intensity of the reflective light
+    float I = pow(normal.dot(H),specSharpness);
+    specColor = (specColor*I*specIntensity)/dist;
+    return specColor;
+}
+
 
 
 

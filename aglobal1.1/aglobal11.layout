@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="..\Material.h" open="1" top="0" tabpos="4">
-		<Cursor position="1069" topLine="15" />
+	<File name="..\Material.h" open="1" top="0" tabpos="3">
+		<Cursor position="2116" topLine="0" />
 	</File>
-	<File name="..\PolygonObject.h" open="1" top="0" tabpos="5">
+	<File name="..\PolygonObject.h" open="1" top="0" tabpos="4">
 		<Cursor position="169" topLine="0" />
 	</File>
 	<File name="..\Renderer.cpp" open="1" top="0" tabpos="2">
@@ -13,10 +13,10 @@
 	<File name="..\Shape.h" open="1" top="0" tabpos="1">
 		<Cursor position="74" topLine="0" />
 	</File>
-	<File name="..\Sphere.cpp" open="1" top="0" tabpos="6">
+	<File name="..\Sphere.cpp" open="1" top="0" tabpos="5">
 		<Cursor position="114" topLine="0" />
 	</File>
-	<File name="..\Window.cpp" open="1" top="1" tabpos="3">
-		<Cursor position="15172" topLine="441" />
+	<File name="..\Window.cpp" open="1" top="1" tabpos="6">
+		<Cursor position="16613" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

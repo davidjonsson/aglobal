@@ -16,7 +16,7 @@
 1288653467 c:\renderer\git\ray.h
 	"Vec3f.h"
 
-1288772460 c:\renderer\git\material.h
+1288795607 c:\renderer\git\material.h
 	<iostream>
 	"Vec3f.h"
 
@@ -3394,7 +3394,7 @@
 
 1284689668 c:\sourcecode\libraries\wxwidgets2.8\include\wx\os2\filedlg.h
 
-1288622010 c:\renderer\git\window.h
+1288794822 c:\renderer\git\window.h
 	<wx/wx.h>
 	"Material.h"
 	"Ray.h"
@@ -3425,7 +3425,16 @@
 1288726127 source:c:\renderer\git\light.cpp
 	"Light.h"
 
-1288772964 source:c:\renderer\git\window.cpp
+1288796716 source:c:\renderer\git\window.cpp
 	"Window.h"
 	<stdlib.h>
+
+1288796940 source:c:\renderer\git\traceray.cpp
+	"TraceRay.h"
+	<stdlib.h>
+
+1288796913 c:\renderer\git\traceray.h
+	"Vec3f.h"
+	"light.h"
+	"Shape.h"
 
