@@ -1,30 +1,30 @@
 # depslib dependency file v1.0
-1288622010 source:c:\renderer\git\polygonobject.cpp
+1288833812 source:c:\renderer\git\polygonobject.cpp
 	"PolygonObject.h"
 
-1288653552 c:\renderer\git\polygonobject.h
+1288833812 c:\renderer\git\polygonobject.h
 	"Shape.h"
 
-1288622010 c:\renderer\git\shape.h
+1288833812 c:\renderer\git\shape.h
 	"Vec3f.h"
 	"Ray.h"
 	"Material.h"
 
-1288622010 c:\renderer\git\vec3f.h
+1288833812 c:\renderer\git\vec3f.h
 	<math.h>
 
-1288653467 c:\renderer\git\ray.h
+1288833812 c:\renderer\git\ray.h
 	"Vec3f.h"
 
-1288795607 c:\renderer\git\material.h
+1288864244 c:\renderer\git\material.h
 	<iostream>
 	"Vec3f.h"
 
-1288622010 source:c:\renderer\git\renderer.cpp
+1288833812 source:c:\renderer\git\renderer.cpp
 	"Renderer.h"
 	"Window.h"
 
-1288653457 c:\renderer\git\renderer.h
+1288833812 c:\renderer\git\renderer.h
 	<wx/wx.h>
 
 1284689690 c:\sourcecode\libraries\wxwidgets2.8\include\wx\wx.h
@@ -3394,7 +3394,7 @@
 
 1284689668 c:\sourcecode\libraries\wxwidgets2.8\include\wx\os2\filedlg.h
 
-1288794822 c:\renderer\git\window.h
+1288833812 c:\renderer\git\window.h
 	<wx/wx.h>
 	"Material.h"
 	"Ray.h"
@@ -3408,24 +3408,24 @@
 	<math.h>
 	<wx/wx.h>
 
-1288622010 c:\renderer\git\sphere.h
+1288833812 c:\renderer\git\sphere.h
 	"Shape.h"
 
-1288726127 c:\renderer\git\light.h
+1288833812 c:\renderer\git\light.h
 	"Shape.h"
 	"Vec3f.h"
 
-1288653573 source:c:\renderer\git\sphere.cpp
+1288833812 source:c:\renderer\git\sphere.cpp
 	"Sphere.h"
 
-1288622010 source:c:\renderer\git\vec3f.cpp
+1288833812 source:c:\renderer\git\vec3f.cpp
 	"Vec3f.h"
 	<iostream>
 
-1288726127 source:c:\renderer\git\light.cpp
+1288833812 source:c:\renderer\git\light.cpp
 	"Light.h"
 
-1288796716 source:c:\renderer\git\window.cpp
+1288881724 source:c:\renderer\git\window.cpp
 	"Window.h"
 	<stdlib.h>
 

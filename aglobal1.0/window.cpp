@@ -188,7 +188,7 @@ void Window::OnPaintRender(wxPaintEvent & event)
                     col2.Set((r.color.x * 255), (r.color.x * 255), (r.color.x * 255));
                     dc.SetPen(wxPen(col2, 1, wxSOLID));
                     dc2image.SetPen(wxPen(col2, 1, wxSOLID));
-                    printwx();
+
 
                     didHit = true;
                 }
