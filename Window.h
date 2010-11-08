@@ -15,6 +15,7 @@
 #include <math.h>
 #include <wx/wx.h>
 
+
 class Window : public wxFrame
 {
     public:
@@ -23,6 +24,7 @@ class Window : public wxFrame
          void OnPaint(wxPaintEvent & event);
          void OnPaintRender(wxPaintEvent & event);
          void OnRender(wxCommandEvent& event);
+
 
         // Vec3f **pixelData;
 

@@ -13,10 +13,10 @@
 1288833812 c:\renderer\git\vec3f.h
 	<math.h>
 
-1288833812 c:\renderer\git\ray.h
+1288950659 c:\renderer\git\ray.h
 	"Vec3f.h"
 
-1288864244 c:\renderer\git\material.h
+1289198935 c:\renderer\git\material.h
 	<iostream>
 	"Vec3f.h"
 
@@ -3394,7 +3394,7 @@
 
 1284689668 c:\sourcecode\libraries\wxwidgets2.8\include\wx\os2\filedlg.h
 
-1288833812 c:\renderer\git\window.h
+1289213921 c:\renderer\git\window.h
 	<wx/wx.h>
 	"Material.h"
 	"Ray.h"
@@ -3411,9 +3411,10 @@
 1288833812 c:\renderer\git\sphere.h
 	"Shape.h"
 
-1288833812 c:\renderer\git\light.h
+1289200981 c:\renderer\git\light.h
 	"Shape.h"
 	"Vec3f.h"
+	"PolygonObject.h"
 
 1288833812 source:c:\renderer\git\sphere.cpp
 	"Sphere.h"
@@ -3422,19 +3423,7 @@
 	"Vec3f.h"
 	<iostream>
 
-1288833812 source:c:\renderer\git\light.cpp
+1289201777 source:c:\renderer\git\light.cpp
 	"Light.h"
-
-1288881724 source:c:\renderer\git\window.cpp
-	"Window.h"
-	<stdlib.h>
-
-1288796940 source:c:\renderer\git\traceray.cpp
-	"TraceRay.h"
-	<stdlib.h>
-
-1288796913 c:\renderer\git\traceray.h
-	"Vec3f.h"
-	"light.h"
-	"Shape.h"
+	"PolygonObject.h"
 

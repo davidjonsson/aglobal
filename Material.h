@@ -3,10 +3,11 @@
 
 #include <iostream>
 #define DIFFUSE 1
-#define SPECULAR 2
+#define UNDEFINED 2
 #define REFLECTIVE 3
 #define TRANSMITIVE 4
 #define GLASS 5
+#define LIGHT 6
 #include "Vec3f.h"
 class Material{
       public:
@@ -20,24 +21,19 @@ class Material{
                             refrIndex = 1.55;
                             if(wR > 0 && wT > 0 && specH >0 && specI > 0)
                             type = GLASS;
-                            else if(wR >0)
+                            else if(wR >0 && wT <= 0)
                             type = REFLECTIVE;
-                            else if(wT > 0)
+                            else if(wT > 0 && wR <= 0)
                             type = TRANSMITIVE;
-                            else if(specH >0 && specI > 0)
-                            type = SPECULAR;
-                            else
+                            else if(wR == 0 && wT == 0)
                             type = DIFFUSE;
+                            else
+                            type = UNDEFINED;
                             }
              Material(const Material& mat){
                             *this = mat;
                             };
 
-              void print(){
-                      std::cout<<"Material color: ";
-                      color.print();
-                      std::cout<<"WR:" << wR<<" WT: "<<wT<<std::endl;
-                      };
               const Material& operator=(const Material& mat){
                     this->color = mat.color;
                     this->wR = mat.wR;
@@ -56,6 +52,9 @@ class Material{
               int getType()
               {
                   return this->type;
+              }
+              void setType(int n){
+                this->type = n;
               }
 
               Vec3f color;

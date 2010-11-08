@@ -13,14 +13,14 @@
 	<File name="..\Renderer.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="329" topLine="0" />
 	</File>
-	<File name="..\Shape.h" open="0" top="0" tabpos="1">
-		<Cursor position="74" topLine="0" />
+	<File name="..\Shape.h" open="1" top="1" tabpos="2">
+		<Cursor position="56" topLine="0" />
 	</File>
 	<File name="..\Sphere.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="114" topLine="0" />
 	</File>
-	<File name="..\Window.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="13220" topLine="408" />
+	<File name="..\Window.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="11987" topLine="484" />
 	</File>
 	<File name="..\Window.h" open="0" top="0" tabpos="0">
 		<Cursor position="161" topLine="0" />
